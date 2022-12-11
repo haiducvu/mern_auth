@@ -1,7 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function RegisterPage() {
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleChangeUserName = (event) => {
+    setUserName(event.target.value);
+  };
+
+  const handleChangeEmail = (event) => {
+    setEmail(event.target.value);
+  };
+
+  const handleChangePassword = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/register",
+      {
+        username: userName,
+        email: email,
+        password: password,
+      }
+    );
+    if (response.status === 200) {
+      navigate("/login");
+    }
+  };
+
   return (
     <div className="register-page">
       <div className="register-box">
@@ -15,13 +49,15 @@ function RegisterPage() {
           <div className="card-body register-card-body">
             <p className="login-box-msg">Register a new membership</p>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="input-group mb-3">
                 <input
                   id="username"
                   type="text"
                   className="form-control"
                   placeholder="User name"
+                  value={userName}
+                  onChange={handleChangeUserName}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
@@ -35,6 +71,8 @@ function RegisterPage() {
                   type="email"
                   className="form-control"
                   placeholder="Email"
+                  value={email}
+                  onChange={handleChangeEmail}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
@@ -48,6 +86,8 @@ function RegisterPage() {
                   type="password"
                   className="form-control"
                   placeholder="Password"
+                  value={password}
+                  onChange={handleChangePassword}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">

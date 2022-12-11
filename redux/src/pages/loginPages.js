@@ -1,7 +1,30 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function LoginPage() {
+  const [userInput, setUserInput] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (event) => {
+    setUserInput({
+      ...userInput,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const handleSubmitLogin = async (event) => {
+    event.preventDefault();
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      userInput
+    );
+    console.log("res", response);
+  };
+
   return (
     <div className="login-page">
       <div className="login-box">
@@ -14,13 +37,16 @@ function LoginPage() {
           <div className="card-body login-card-body">
             <p className="login-box-msg">Sign in to start your session</p>
 
-            <form>
+            <form onSubmit={handleSubmitLogin}>
               <div className="input-group mb-3">
                 <input
                   id="email"
                   type="email"
                   className="form-control"
                   placeholder="Email"
+                  value={userInput.email}
+                  name="email"
+                  onChange={handleInputChange}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
@@ -34,6 +60,9 @@ function LoginPage() {
                   type="password"
                   className="form-control"
                   placeholder="Password"
+                  value={userInput.password}
+                  name="password"
+                  onChange={handleInputChange}
                 />
                 <div className="input-group-append">
                   <div className="input-group-text">
