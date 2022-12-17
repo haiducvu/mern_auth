@@ -2,8 +2,13 @@ import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import jwtDecode from "jwt-decode";
 
 function LoginPage() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [userInput, setUserInput] = useState({
     email: "",
     password: "",
@@ -22,7 +27,24 @@ function LoginPage() {
       "http://localhost:5000/api/auth/login",
       userInput
     );
-    console.log("res", response);
+
+    // save user login in store
+
+    if (response.status === 200) {
+      const accessToken = response.data.accessToken;
+      const userLogin = jwtDecode(accessToken);
+      // console.log(userLogin, "userLogin");
+      dispatch({
+        type: "LOGIN_SUCCESS",
+        payload: userLogin,
+      });
+      localStorage.setItem("accessToken", accessToken);
+      if (userLogin.role === "regular") {
+        navigate("/admin");
+      } else {
+        // redirect to home page
+      }
+    }
   };
 
   return (
