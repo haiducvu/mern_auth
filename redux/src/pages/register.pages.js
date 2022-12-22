@@ -23,14 +23,11 @@ function RegisterPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/register",
-      {
-        username: userName,
-        email: email,
-        password: password,
-      }
-    );
+    const response = await axios.post("api/auth/register", {
+      username: userName,
+      email: email,
+      password: password,
+    });
     if (response.status === 200) {
       navigate("/login");
     }

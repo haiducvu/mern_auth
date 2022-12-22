@@ -23,10 +23,7 @@ function LoginPage() {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault();
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
-      userInput
-    );
+    const response = await axios.post("api/auth/login", userInput);
 
     // save user login in store
 

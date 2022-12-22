@@ -36,21 +36,39 @@ const login = async (req, res) => {
       return res.status(400).send("Invalid email or password");
     }
 
-    const jwtToken = jwt.sign({
-      _id: user.id,
-      username: user.username,
-      role: user.role,
-    }, process.env.SECRET_JWT, { expiresIn: 3600 });  // expire token
+    const jwtToken = jwt.sign(
+      {
+        _id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+      process.env.SECRET_JWT,
+      { expiresIn: 3600 }
+    ); // expire token
 
     return res.status(200).send({
-      accessToken: jwtToken
+      accessToken: jwtToken,
     });
   } catch (error) {
     console.log("error", error);
   }
 };
 
+const getUserLogin = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await userModel.findById(userId);
+    res.json({
+      _id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (error) {}
+};
+
 module.exports = {
   register: register,
   login: login,
+  getUserLogin: getUserLogin,
 };
