@@ -1,20 +1,28 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function NavComponent() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const authState = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // axios.get("api/auth/me");
     async function getuserLogin() {
-      const response = await axios.get("api/auth/me");
-      const user = response.data;
-      dispatch({
-        type: "LOGIN_SUCCESS",
-        payload: user,
-      });
+      try {
+        const response = await axios.get("api/auth/me");
+        const user = response.data;
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: user,
+        });
+      } catch (error) {
+        console.log("error", error);
+        if (error.response.status === 401) {
+          navigate("/login");
+        }
+      }
     }
 
     getuserLogin();

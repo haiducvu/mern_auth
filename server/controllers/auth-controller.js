@@ -43,7 +43,7 @@ const login = async (req, res) => {
         role: user.role,
       },
       process.env.SECRET_JWT,
-      { expiresIn: 3600 }
+      { expiresIn: 84600 }
     ); // expire token
 
     return res.status(200).send({
